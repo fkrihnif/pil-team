@@ -1,0 +1,11 @@
+{
+    "name": "FinanceReceipt",
+    "alias": "financereceipt",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\FinanceReceipt\\App\\Providers\\FinanceReceiptServiceProvider"
+    ],
+    "files": []
+}

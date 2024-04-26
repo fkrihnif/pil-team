@@ -6,5 +6,6 @@
     "MasterData": true,
     "FinanceDataMaster": true,
     "RealtimeTracking": true,
-    "FinancePiutang": true
+    "FinancePiutang": true,
+    "FinanceReceipt": true
 }

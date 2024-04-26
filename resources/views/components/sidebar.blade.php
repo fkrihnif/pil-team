@@ -43,12 +43,12 @@
                 </li>
 
                 <li class="slide">
-                    <a class="side-menu__item {{ request()->is('finance/master-data') || request()->is('finance/master-data/*') || request()->is('finance/piutang') || request()->is('finance/piutang/*') ?'bg-primary' : '' }}" data-bs-toggle="slide" href="javascript:void(0)" style="border-radius: 5px;"><i class="side-menu__icon fe fe-pie-chart text-white"></i><span class="side-menu__label text-white">Finance</span><i class="angle fe fe-chevron-right text-white"></i></a>
-                    <ul class="slide-menu"  style="display: {{ request()->is('finance/master-data') || request()->is('finance/master-data/*') || request()->is('finance/piutang') || request()->is('finance/piutang/*')  ?'block' : 'none' }}">
+                    <a class="side-menu__item {{ request()->is('finance/master-data') || request()->is('finance/master-data/*') || request()->is('finance/piutang') || request()->is('finance/piutang/*') || request()->is('finance/receipt') || request()->is('finance/receipt/*') ?'bg-primary' : '' }}" data-bs-toggle="slide" href="javascript:void(0)" style="border-radius: 5px;"><i class="side-menu__icon fe fe-pie-chart text-white"></i><span class="side-menu__label text-white">Finance</span><i class="angle fe fe-chevron-right text-white"></i></a>
+                    <ul class="slide-menu"  style="display: {{ request()->is('finance/master-data') || request()->is('finance/master-data/*') || request()->is('finance/piutang') || request()->is('finance/piutang/*') || request()->is('finance/receipt') || request()->is('finance/receipt/*')  ?'block' : 'none' }}">
                         <li class="side-menu-label1 text-white"><a href="javascript:void(0)">Finance</a></li>
                         <li><a href="{{ route('finance.master-data.index') }}" class="slide-item {{ request()->is('finance/master-data') || request()->is('finance/master-data/*') ?'text-primary' : 'text-white' }}"> Data Master</a></li>
                         <li><a href="{{ route('finance.piutang.index') }}" class="slide-item {{ request()->is('finance/piutang') || request()->is('finance/piutang/*') ?'text-primary' : 'text-white' }}"> Sales</a></li>
-                        <li><a href="" class="slide-item text-white"> Receipt</a></li>
+                        <li><a href="{{ route('finance.receipt.index') }}" class="slide-item {{ request()->is('finance/receipt') || request()->is('finance/receipt/*') ?'text-primary' : 'text-white' }}"> Receipt</a></li>
                         <li><a href="" class="slide-item text-white"> Payments</a></li>
                         <li><a href="" class="slide-item text-white"> Report</a></li>
                     </ul>
