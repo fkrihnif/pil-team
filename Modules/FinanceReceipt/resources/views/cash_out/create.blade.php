@@ -69,7 +69,7 @@
                                                 @endforeach
                                             </select>
                                         </div>
-                                        <a data-bs-effect="effect-scale" data-bs-toggle="modal" href="#modal-create"><i class="fe fe-plus me-1"></i>Create New Account</a>
+                                        <a data-bs-effect="effect-scale" data-bs-toggle="modal" href="#modaldemo8"><i class="fe fe-plus me-1"></i>Create New Account</a>
                                     </div>
                                 </div>
                                 <div class="col-md-3">
@@ -526,6 +526,59 @@
                                 </div>
                             </form>
                         </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{{-- modal create account --}}
+<div class="modal fade" id="modaldemo8" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">+ Add Account</h5>
+                <button class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <form action="{{ route('finance.master-data.account.store') }}" method="POST">
+                            @csrf
+                            <div class="form-group">
+                                <label>Account Type</label>
+                                <select class="form-control select2 form-select"
+                                    data-placeholder="Choose one" name="account_type_id">
+                                    @foreach ($accountTypes as $accountType)
+                                        <option {{ old('account_type_id') == $accountType->id ? "selected" : "" }} value="{{ $accountType->id }}">{{ $accountType->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Code</label>
+                                <input type="text" name="code" value="{{ old('code') }}" id="code" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label>Account Name</label>
+                                <input type="text" name="account_name" value="{{ old('account_name') }}" id="account_name" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label>Currency</label>
+                                <select class="form-control select2 form-select"
+                                    data-placeholder="Choose one" name="master_currency_id">
+                                    @foreach ($currencies as $currency)
+                                        <option {{ old('master_currency_id') == $currency->id ? "selected" : "" }} value="{{ $currency->id }}">{{ $currency->initial }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="mt-3" style="text-align: right">
+                                <a class="btn btn-white color-grey" data-bs-dismiss="modal">Close</a>
+                                <button type="submit" class="btn btn-primary">Save</button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>

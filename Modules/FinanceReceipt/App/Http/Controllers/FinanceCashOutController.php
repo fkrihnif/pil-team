@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
 use Modules\Marketing\App\Models\MarketingExport;
 use Modules\Marketing\App\Models\MarketingImport;
+use Modules\FinanceDataMaster\App\Models\AccountType;
 use Modules\FinanceDataMaster\App\Models\MasterAccount;
 use Modules\FinanceDataMaster\App\Models\MasterContact;
 use Modules\FinanceDataMaster\App\Models\MasterCurrency;
@@ -32,6 +33,7 @@ class FinanceCashOutController extends Controller
         $contacts = MasterContact::all();
         $currencies = MasterCurrency::all();
         $accounts = MasterAccount::all();
+        $accountTypes = AccountType::all();
 
         $export = MarketingExport::where("status", 2)->get();
         $import = MarketingImport::where("status", 2)->get();
@@ -47,7 +49,7 @@ class FinanceCashOutController extends Controller
             }
         }
 
-        return view('financereceipt::cash_out.create', compact('contacts', 'currencies', 'accounts', 'job_orders'));
+        return view('financereceipt::cash_out.create', compact('contacts', 'currencies', 'accounts', 'job_orders', 'accountTypes'));
     }
 
     /**
