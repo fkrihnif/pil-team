@@ -59,7 +59,6 @@ class FinanceCashOutController extends Controller
     public function store(Request $request)
     {
         //
-        dd($request);
         try {
             DB::beginTransaction();
             //Insert marketing to Database
@@ -68,7 +67,7 @@ class FinanceCashOutController extends Controller
                 $data = FinanceCashOutHeadModel::find($request->old_id);
                 $validator = Validator::make($request->all(), [
                     'contact_id' => ['required'],
-                    'customer_id' => ['required'],
+                    'account_id' => ['required'],
                     'currency_id' => ['required'],
                     'date' => ['required'],
                     'transaction_no' => ['required', 'unique:finance_cash_out_head,transaction_no,NULL,NULL,deleted_at,NULL'],
@@ -81,7 +80,7 @@ class FinanceCashOutController extends Controller
 
                 $validator = Validator::make($request->all(), [
                     'contact_id' => ['required'],
-                    'customer_id' => ['required'],
+                    'account_id' => ['required'],
                     'currency_id' => ['required'],
                     'date' => ['required'],
                     'transaction_no' => ['required', 'unique:finance_cash_out_head,transaction_no,'.$request->old_id.',id,deleted_at,NULL'],

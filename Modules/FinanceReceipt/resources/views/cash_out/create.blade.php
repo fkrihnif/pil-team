@@ -49,7 +49,7 @@
                                                 <option label="Choose one" selected disabled></option>
                                                 @foreach ($contacts as $c)
                                                     @if (in_array(1, json_decode($c->type)))
-                                                    <option value="{{ $c->id }}">{{ $c->customer_name }}</option>   
+                                                    <option {{ old('contact_id') == $c->id ? "selected" : "" }} value="{{ $c->id }}">{{ $c->customer_name }}</option>   
                                                     @endif
                                                 @endforeach
                                             </select>
@@ -65,7 +65,7 @@
                                                 data-placeholder="Choose one" name="account_id" id="account_id" required>
                                                 <option label="Choose one" selected disabled></option>
                                                 @foreach ($accounts as $a)
-                                                    <option value="{{ $a->id }}">{{ $a->account_name }}</option>   
+                                                    <option {{ old('account_id') == $a->id ? "selected" : "" }} value="{{ $a->id }}">{{ $a->account_name }}</option>   
                                                 @endforeach
                                             </select>
                                         </div>
@@ -79,7 +79,7 @@
                                             data-placeholder="Choose one" name="currency_id" id="currency_id" required>
                                             <option label="Choose one" selected disabled></option>
                                             @foreach ($currencies as $c)
-                                                <option value="{{ $c->id }}">{{ $c->initial }}</option>   
+                                                <option {{ old('currency_id') == $c->id ? "selected" : "" }} value="{{ $c->id }}">{{ $c->initial }}</option>   
                                             @endforeach
                                         </select>
                                     </div>
