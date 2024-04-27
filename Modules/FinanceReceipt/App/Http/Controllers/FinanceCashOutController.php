@@ -7,6 +7,7 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Validator;
 use Modules\Marketing\App\Models\MarketingExport;
 use Modules\Marketing\App\Models\MarketingImport;
 use Modules\FinanceDataMaster\App\Models\AccountType;
@@ -65,10 +66,36 @@ class FinanceCashOutController extends Controller
 
             if ($request->old_id) {
                 $data = FinanceCashOutHeadModel::find($request->old_id);
+                $validator = Validator::make($request->all(), [
+                    'contact_id' => ['required'],
+                    'customer_id' => ['required'],
+                    'currency_id' => ['required'],
+                    'date' => ['required'],
+                    'transaction_no' => ['required', 'unique:finance_cash_out_head,transaction_no,NULL,NULL,deleted_at,NULL'],
+                    'job_order_id' => ['required_if:is_job_order,==,1'],
+                ]);
+
                 $data->updated_by = auth()->user()->id;
             } else {
                 $data = new FinanceCashOutHeadModel();
+
+                $validator = Validator::make($request->all(), [
+                    'contact_id' => ['required'],
+                    'customer_id' => ['required'],
+                    'currency_id' => ['required'],
+                    'date' => ['required'],
+                    'transaction_no' => ['required', 'unique:finance_cash_out_head,transaction_no,'.$request->old_id.',id,deleted_at,NULL'],
+                    'job_order_id' => ['required_if:is_job_order,==,1'],
+                ]);
+
                 $data->created_by = auth()->user()->id;
+            }
+
+            if ($validator->fails()) {
+                toast('failed to add data!','error');
+                return redirect()->back()
+                            ->withErrors($validator)
+                            ->withInput();
             }
 
             $data->contact_id = $request->contact_id;
