@@ -6,7 +6,7 @@
 
         <!-- CONTAINER -->
         <div class="main-container container-fluid">
-        <form action="" method="POST" enctype="multipart/form-data">
+        <form method="POST" enctype="multipart/form-data" action="{{ route('finance.receipt.cash-out.store') }}">
             @csrf
             <!-- PAGE-HEADER -->
             <div class="page-header mb-0">
@@ -76,7 +76,7 @@
                                     <div class="form-group">
                                         <label for="" class="form-label">Mata Uang</label>
                                         <select class="form-control select2 form-select"
-                                            data-placeholder="Choose one" name="customer_id" id="customer_id" required>
+                                            data-placeholder="Choose one" name="currency_id" id="currency_id" required>
                                             <option label="Choose one" selected disabled></option>
                                             @foreach ($currencies as $c)
                                                 <option value="{{ $c->id }}">{{ $c->initial }}</option>   
@@ -90,29 +90,26 @@
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="" class="form-label">Date</label>
-                                        <input type="date" class="form-control" name="no_cipl" id="no_cipl" value="{{ old('no_cipl') }}" placeholder="100001"  >
+                                        <input type="date" class="form-control" name="date" id="date" value="{{ old('date') }}" required>
                                     </div>
                                 </div>
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="" class="form-label">Nomor Transaksi <a data-bs-effect="effect-scale" data-bs-toggle="modal" href="#modal-transaction-format"><i class="fa fa-cog"></i></a></label>
-                                        <select class="form-control select2 form-select"
-                                            data-placeholder="Choose one" name="customer_id" id="customer_id" required>
-                                            <option label="Choose one" selected disabled></option>
-                                        </select>
+                                        <input type="tex" class="form-control" name="transaction_no" id="transaction_no" value="{{ old('transaction_no') }}" placeholder="100001"  readonly required>
                                     </div>
                                 </div>
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="" class="form-label">Description</label>
-                                        <input type="text" class="form-control" name="no_cipl" id="no_cipl" value="{{ old('no_cipl') }}" placeholder="Sales Order - No Transaksi"  >
+                                        <input type="text" class="form-control" name="description" id="description" value="{{ old('description') }}" placeholder="Desc..."  >
                                     </div>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-md-6">
                                     <label class="custom-control custom-radio">
-                                        <input type="checkbox" class="custom-control-input" id="choose_job_order" name="choose_job_order"
+                                        <input type="checkbox" class="custom-control-input" id="is_job_order" name="is_job_order"
                                             value="1">
                                         <span class="custom-control-label"><b>Choose Job Order</b></span>
                                     </label>
@@ -124,7 +121,7 @@
                                         <div class="form-group">
                                             <label for="" class="form-label">Job Order</label>
                                             <select class="form-control select2 form-select"
-                                                data-placeholder="Choose one" name="job_order_id" id="job_order_id" required>
+                                                data-placeholder="Choose one" name="job_order_id" id="job_order_id">
                                                 <option label="Choose one" selected disabled></option>
                                                 @foreach ($job_orders as $j)
                                                 <option data-type="{{ $j->type }}" data-consignee="{{ $j->consignee }}" data-shipper="{{ $j->shipper }}" data-transportation="{{ $j->transportation }}" data-transportation_desc="{{ $j->transportation_desc }}" value="{{ $j->id }}">{{ "(".$j->job_order_id.") - ".$j->type }}</option>   
@@ -135,13 +132,14 @@
                                     <div class="col-md-4">
                                         <div class="form-group">
                                             <label for="" class="form-label">Consignee</label>
-                                            <input type="text" class="form-control" name="no_cipl" id="no_cipl" value="{{ old('no_cipl') }}" placeholder=""  disabled>
+                                            <input type="text" class="form-control" name="consignee" id="consignee" value="{{ old('consignee') }}" placeholder="auto fill"  disabled>
+                                            <input type="text" class="form-control" name="type_job_order" id="type_job_order" value="{{ old('type_job_order') }}" placeholder="auto fill"  hidden>
                                         </div>
                                     </div>
                                     <div class="col-md-4">
                                         <div class="form-group">
                                             <label for="" class="form-label">Shipper</label>
-                                            <input type="text" class="form-control" name="no_cipl" id="no_cipl" value="{{ old('no_cipl') }}" placeholder=""  disabled>
+                                            <input type="text" class="form-control" name="shipper" id="shipper" value="{{ old('shipper') }}" placeholder="auto fill"  disabled>
                                         </div>
                                     </div>
                                 </div>
@@ -150,23 +148,19 @@
                                         <div class="form-group">
                                             <label for="" class="form-label">Transportation</label>
                                             <select class="form-control select2 form-select" disabled
-                                                data-placeholder="Auto Select" name="transportation">
+                                                data-placeholder="Auto Select" name="transportation" id="transportation">
                                                 <option label="Choose one" selected disabled></option>
                                                 <option value="1">Air Freight</option>
                                                 <option value="2">Sea Freight</option>
                                                 <option value="3">Land Trucking</option>
                                             </select>
                                         </div>
-                                        <label class="custom-control custom-radio">
-                                            <input type="radio" class="custom-control-input"
-                                                name="transportation_desc" value="Express" checked>
-                                            <span class="custom-control-label">Hand Carry</span>
-                                        </label>
+                                        <div id="radio_buttons"></div>
                                     </div>
                                     <div class="col-md-4">
                                         <div class="form-group">
                                             <label for="" class="form-label">Commodity</label>
-                                            <input type="text" class="form-control" name="no_cipl" id="no_cipl" value="{{ old('no_cipl') }}" placeholder="" disabled>
+                                            <input type="text" class="form-control" name="commodity" id="commodity" value="{{ old('commodity') }}" placeholder="auto fill" disabled>
                                         </div>
                                     </div>
                                 </div>
@@ -197,7 +191,7 @@
                                             <input type="hidden" name="seq_detail[]" id="dimension[1][seq_detail]" data-row="1" value="1" >
                                             <td width="5%"></td>
                                             <td width="40%">
-                                                <input type="text" class="form-control description-input" name="description_detail[]"  id="dimension[1][description_detail]" data-row="1" placeholder="Desc" />
+                                                <input type="text" class="form-control description-input" name="description_detail[]"  id="dimension[1][description_detail]" data-row="1" placeholder="Desc" required/>
                                                 <label for="" class="form-label">Remark</label>
                                                 <input type="text" class="form-control remark-input mt-2" name="remark_detail[]" id="dimension[1][remark_detail]" data-row="1"  placeholder="Text.." />
                                                 
@@ -212,7 +206,7 @@
                                                 </select>
                                             </td>
                                             <td width="25%">
-                                                <input type="text" class="form-control remark-input" name="total_detail[]" id="dimension[1][total_detail]" data-row="1"  />
+                                                <input type="text" class="form-control remark-input sub-detail" name="total_detail[]" id="dimension[1][total_detail]" data-row="1" onkeyup="calculateTotal(event, 1)"  required/>
                                             </td>
                                             <td width="10%" style="text-align: center;">
                                                 <a href="javascript:void(0)" class="btn text-danger remove-dimension"><span class="fe fe-trash-2 fs-14"></span></a>
@@ -233,31 +227,8 @@
                                         <tr>
                                             <td>
                                                 <div class="d-flex justify-content-between">
-                                                    Biaya Lain
-                                                    <input type="text" style="width: 50%" class="form-control remark-input" name="remark_${groupChar}[]" placeholder="0" />
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <div class="d-flex justify-content-between">
-                                                    Diskon (-)
-                                                    <div style="width: 10%">
-                                                        <select class="form-control select2 form-select" style="width: 5%" name="" id="">
-                                                            <option value="persen">%</option>
-                                                            <option value="nominal">0</option>
-                                                        </select>
-                                                    </div>
-                                                    <input type="text" style="width: 10%" class="form-control remark-input" name="remark_${groupChar}[]" placeholder="0" />
-                                                    <input type="text" style="width: 50%" class="form-control remark-input" name="remark_${groupChar}[]" placeholder="Rp 0,00" />
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <div class="d-flex justify-content-between">
                                                     Total
-                                                    <input type="text" style="width: 50%" class="form-control remark-input" name="remark_${groupChar}[]" placeholder="Rp 0,00" />
+                                                    <input type="text" style="width: 50%" class="form-control remark-input" name="grand_total"  id="grand_total" placeholder="Rp 0,00" />
                                                 </div>
                                             </td>
                                         </tr>
@@ -300,12 +271,15 @@
                     <div class="col-md-12">
                         <div class="panel panel-primary">
                             <div class="tab-menu-heading tab-menu-heading-boxed">
-                                <div class="tabs-menu tabs-menu-border">
-                                    <!-- Tabs -->
-                                    <ul class="nav panel-tabs">
-                                        <li><a href="#tab29" class="active" data-bs-toggle="tab">Custom Format</a></li>
-                                        <li><a href="#tab30" data-bs-toggle="tab">Tambah Baru</a></li>
-                                    </ul>
+                                <div class="card-body">
+                                    <div class="form-check"> 
+                                        <input class="form-check-input" type="radio" name="transcation_no_type" id="transcation_no_type1" checked value="1"> 
+                                        <label class="form-check-label" for="transcation_no_type1"> Custom Format </label> 
+                                    </div> 
+                                    <div class="form-check"> 
+                                        <input class="form-check-input" type="radio" name="transcation_no_type" id="transcation_no_type2" value="2"> 
+                                        <label class="form-check-label" for="transcation_no_type2"> Tambah Baru </label> 
+                                    </div> 
                                 </div>
                             </div>
                             <div class="panel-body tabs-menu-body mt-3">
@@ -331,18 +305,18 @@
                                     <div class="tab-pane" id="tab30">
                                             <div class="row">
                                                 <div class="col-lg-4">
-                                                    <input type="text" class="form-control remark-input" name="remark_${groupChar}[]" placeholder="Example: INV/"  />
+                                                    <input type="text" class="form-control remark-input" name="first_code" id="first_code" placeholder="Example: INV/" />
                                                 </div>
                                                 <div class="col-lg-4">
-                                                    <input type="text" class="form-control remark-input" name="remark_${groupChar}[]" disabled placeholder="tahun" />
+                                                    <input type="text" class="form-control remark-input" name="year_code" id="year_code" readonly placeholder="tahun" />
                                                 </div>
                                                 <div class="col-lg-4">
-                                                    <input type="text" class="form-control remark-input" name="remark_${groupChar}[]" placeholder="Example: /XV" />
+                                                    <input type="text" class="form-control remark-input" name="last_code" id="last_code" placeholder="Example: /XV" />
                                                 </div>
                                             </div>
                                         <div class="form-group">
                                             <label for="" class="form-label">Mulai Dari Nomor</label>
-                                            <input type="text" class="form-control" name="no_cipl" id="no_cipl" value="{{ old('no_cipl') }}" placeholder=""  >
+                                            <input type="number" class="form-control" name="nomor" id="nomor" value="{{ old('nomor') }}" placeholder=""  >
                                         </div>
                                     </div>
                                 </div>
@@ -351,7 +325,7 @@
                         <br><br><br><br><br>
                         <div class="mt-3" style="text-align: right">
                             <a class="btn btn-white color-grey" data-bs-dismiss="modal">Close</a>
-                            <button type="submit" class="btn btn-primary">Save</button>
+                            <button type="button" id="save_no" class="btn btn-primary">Save</button>
                         </div>
                     </div>
                 </div>
@@ -583,9 +557,10 @@
 
     <script>
         $(document).ready(function () {
-            $("input:checkbox[name^='choose_job_order']").on('change', function () {
+
+            $("input:checkbox[name^='is_job_order']").on('change', function () {
                 var job_order_display =  document.getElementById("job_order_display");
-                if ($('#choose_job_order').prop('checked')) {
+                if ($('#is_job_order').prop('checked')) {
                     console.log('pencet ini');
                     job_order_display.style['display'] = 'block';
                 } else {
@@ -593,43 +568,23 @@
                 }
             });
 
-
-
-
-            $('select[name="transportation"]').change(function () {
-                if (this.value == '1') {
+            $('select[name="job_order_id"]').change(function () {
+                $("#consignee").val($(this).children('option:selected').data('consignee'));
+                $("#type_job_order").val($(this).children('option:selected').data('type'));
+                $("#shipper").val($(this).children('option:selected').data('shipper'));
+                $("#commodity").val($(this).children('option:selected').data('commodity'));
+                $("#transportation").val($(this).children('option:selected').data('transportation')).trigger('change');
+                if ($(this).children('option:selected').data('transportation') == 1 || $(this).children('option:selected').data('transportation') == 2) {
                     $("#radio_buttons").html("");
                     var radioBtn = $(`<label class="custom-control custom-radio">
-                                            <input type="radio" class="custom-control-input"
+                                            <input type="radio" class="custom-control-input" checked disabled
                                                 name="transportation_desc" value="Hand Carry">
-                                            <span class="custom-control-label">Hand Carry</span>
+                                            <span class="custom-control-label">`+$(this).children('option:selected').data('transportation_desc')+`</span>
                                         </label>
-                                        <label class="custom-control custom-radio">
-                                            <input type="radio" class="custom-control-input"
-                                                name="transportation_desc" value="Express">
-                                            <span class="custom-control-label">Express</span>
-                                        </label>
-                                        <label class="custom-control custom-radio">
-                                            <input type="radio" class="custom-control-input"
-                                                name="transportation_desc" value="Regular">
-                                            <span class="custom-control-label">Regular</span>
-                                        </label>`);
+                                        `);
                     radioBtn.appendTo('#radio_buttons');
                 }
-                else if (this.value == '2') {
-                    $("#radio_buttons").html("");
-                    var radioBtn = $(`<label class="custom-control custom-radio">
-                                            <input type="radio" class="custom-control-input"
-                                                name="transportation_desc" value="FCL">
-                                            <span class="custom-control-label">FCL</span>
-                                        </label>
-                                        <label class="custom-control custom-radio">
-                                            <input type="radio" class="custom-control-input"
-                                                name="transportation_desc" value="LCL">
-                                            <span class="custom-control-label">LCL</span>`);
-                    radioBtn.appendTo('#radio_buttons');
-                }
-                else if (this.value == '3') {
+                else {
                     $("#radio_buttons").html("");
                 }
             });
@@ -735,7 +690,7 @@
                                             </select>
                                         </td>
                                         <td width="25%">
-                                            <input type="text" class="form-control remark-input" name="total_detail[]" id="dimension[`+ increaseNumDimensions + `][total_detail]" data-row="` + increaseNumDimensions + `" />
+                                            <input type="text" class="form-control remark-input sub-detail" name="total_detail[]" id="dimension[`+ increaseNumDimensions + `][total_detail]" data-row="` + increaseNumDimensions + `" onkeyup="calculateTotal(event, ` + increaseNumDimensions + `)" />
                                         </td>
                                         <td width="10%" style="text-align: center;">
                                             <a href="javascript:void(0)" class="btn text-danger remove-dimension"><span class="fe fe-trash-2 fs-14"></span></a>
@@ -771,7 +726,7 @@
                                 </select>
                             </td>
                             <td width="25%">
-                                <input type="text" class="form-control remark-input" name="total_detail[]" id="dimension[`+ increaseNumDimensions + `][total_detail]" data-row="` + increaseNumDimensions + `" />
+                                <input type="text" class="form-control remark-input sub-detail" name="total_detail[]" id="dimension[`+ increaseNumDimensions + `][total_detail]" data-row="` + increaseNumDimensions + `" onkeyup="calculateTotal(event, ` + increaseNumDimensions + `)" />
                             </td>
                             <td width="10%" style="text-align: center;">
                                 <a href="javascript:void(0)" class="btn text-danger remove-dimension"><span class="fe fe-trash-2 fs-14"></span></a>
@@ -829,11 +784,101 @@
 
                     // calculateTotal();
                 }
-                // calculateGrandTotal();
+                var total = 0;
+                var subtotals = document.querySelectorAll('.sub-detail');
+                subtotals.forEach(function(subtotal) {
+                    total += parseFloat(subtotal.value) || 0;
                 });
+                document.getElementById('grand_total').value = total.toFixed(2);
+            });
+
+            $(".form-select").select2({
+                placeholder: "Select",
+                width: "100%",
+            });
+
+            $("#modal-transaction-format").on('show.bs.modal', function () {
+                var todaydate = new Date();
+                var year = todaydate.getFullYear();
+                document.getElementById("year_code").value = year;
+
+                $('input[type=radio][name=transcation_no_type]').change(function() {
+                    if (this.value == 1) {
+                        $('#tab29').addClass('active');
+                        $('#tab30').removeClass('active');
+                    }
+                    else if (this.value == 2) {
+                        $('#tab30').addClass('active');
+                        $('#tab29').removeClass('active');
+                    }
+                });
+
+                $('#save_no').on('click', function(){
+                    var type_no = $('input[type=radio][name=transcation_no_type]:checked').val();
+
+                    if (type_no == 2) {
+                        var firstCode = $('#first_code').val().trim();
+                        var lastCode = $('#last_code').val().trim();
+                        var nomor = $('#nomor').val().trim();
+                        // Periksa apakah karakter terakhir adalah '/'
+
+                        if (firstCode == '') {
+                            swal({
+                                title: "Alert",
+                                text: "(Field Pertama) tidak boleh kosong ",
+                                type: "warning",
+                                timer: 1200,
+                                showConfirmButton: false
+                            });
+                            return false; // Jangan lanjutkan jika input pertama kosong
+                        }
+                        if (lastCode == '') {
+                            swal({
+                                title: "Alert",
+                                text: "(Field Ketiga) tidak boleh kosong ",
+                                type: "warning",
+                                timer: 1200,
+                                showConfirmButton: false
+                            });
+                            return false; // Jangan lanjutkan jika karakter pertama bukan '/'
+                        }
+                        if (nomor == '' || nomor.length < 2) {
+                            swal({
+                                title: "Alert",
+                                text: "(Field Nomor) tidak boleh kosong dan harus terdiri minimal dari 2 digit",
+                                type: "warning",
+                                timer: 1200,
+                                showConfirmButton: false
+                            });
+                            return false; // Jangan lanjutkan jika karakter pertama bukan '/'
+                        }
+                        // Dapatkan nilai dari input dalam modal
+                        var nilaiModal = firstCode+ "/" +$('#year_code').val()+ "/" + nomor + "/" +lastCode;
+                        // Pindahkan nilai dari input modal ke input di luar modal
+                        $('#transaction_no').val(nilaiModal);
+                    } else {
+                        
+                    }
+                    // Tutup modal jika perlu
+                    $('#first_code').val('');
+                    $('#last_code').val('');
+                    $('#nomor').val('');
+                    $('#modal-transaction-format').modal('hide');
+                });
+            });
         
         });
 
+        function calculateTotal(event, row) {
+
+            var total = 0;
+            var subtotals = document.querySelectorAll('.sub-detail');
+            subtotals.forEach(function(subtotal) {
+                total += parseFloat(subtotal.value) || 0;
+            });
+            document.getElementById('grand_total').value = total.toFixed(2);
+        }
+        
     </script>
 
 @endpush

@@ -201,6 +201,9 @@
     <!-- SIDE-MENU JS -->
     <script src="{{ url('assets/plugins/sidemenu/sidemenu.js') }}"></script>
 
+    <!-- SweetAlert JS -->
+    <script src="{{ url('assets/plugins/sweet-alert/sweetalert.min.js') }}"></script>
+
 	<!-- TypeHead js -->
 	<script src="{{ url('assets/plugins/bootstrap5-typehead/autocomplete.js') }}"></script>
     <script src="{{ url('assets/js/typehead.js') }}"></script>

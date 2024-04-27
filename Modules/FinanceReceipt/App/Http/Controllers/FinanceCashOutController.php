@@ -4,13 +4,15 @@ namespace Modules\FinanceReceipt\App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
+use Modules\Marketing\App\Models\MarketingExport;
+use Modules\Marketing\App\Models\MarketingImport;
 use Modules\FinanceDataMaster\App\Models\MasterAccount;
 use Modules\FinanceDataMaster\App\Models\MasterContact;
 use Modules\FinanceDataMaster\App\Models\MasterCurrency;
-use Modules\Marketing\App\Models\MarketingExport;
-use Modules\Marketing\App\Models\MarketingImport;
+use Modules\FinanceReceipt\App\Models\FinanceCashOutHeadModel;
 
 class FinanceCashOutController extends Controller
 {
@@ -54,6 +56,51 @@ class FinanceCashOutController extends Controller
     public function store(Request $request)
     {
         //
+        dd($request);
+        try {
+            DB::beginTransaction();
+            //Insert marketing to Database
+
+            if ($request->old_id) {
+                $data = FinanceCashOutHeadModel::find($request->old_id);
+                $data->updated_by = auth()->user()->id;
+            } else {
+                $data = new FinanceCashOutHeadModel();
+                $data->created_by = auth()->user()->id;
+            }
+
+            $data->contact_id = $request->contact_id;
+            $data->account_id = $request->account_id;
+            $data->currency_id = $request->currency_id;
+            $data->date = $request->date;
+            $data->transaction_no = $request->transaction_no;
+            $data->description = $request->description;
+            $data->is_job_order = $request->is_job_order;
+            $data->job_order_id = $request->job_order_id;
+            $data->save();
+
+            //store dimension to database
+            // if ($request->panjang) {
+            // for($i = 0; $i < count($request->panjang); $i++){
+            //     $dimension = DimensionMarketingExport::create([
+            //         'marketing_export_id' => $data->id,
+            //         'packages' => $request->packages[$i],
+            //         'length' => $request->panjang[$i],
+            //         'width' => $request->lebar[$i],
+            //         'height' => $request->tinggi[$i],
+            //         'input_measure' => $request->user_input[$i],
+            //         'qty' => $request->quantity[$i],
+            //     ]);
+            //     }
+            // }
+
+            DB::commit();
+            toast('Data Added Successfully!','success');
+            return redirect()->route('marketing.export.index');
+        } catch (\Exception $e) {
+            toast('Data Added Failed!','error');
+            return redirect()->route('marketing.export.create');
+        }
     }
 
     /**
