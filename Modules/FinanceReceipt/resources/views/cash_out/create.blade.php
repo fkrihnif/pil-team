@@ -287,8 +287,11 @@
                                     <div class="tab-pane active" id="tab29">
                                         <div class="d-flex d-inline">
                                             <select class="form-control select2 form-select"
-                                                data-placeholder="INV/019//2021/XY/01" name="customer_id" id="customer_id" required>
+                                                data-placeholder="Choose one" name="format_no" id="format_no" required>
                                                 <option label="Choose one" selected disabled></option>
+                                                @foreach ($result as $c)
+                                                    <option {{ old('format_no') == $c ? "selected" : "" }} value="{{ $c }}">{{ $c }}</option>   
+                                                @endforeach
                                             </select>
                                             <a href="#" class="btn text-danger btn-sm"
                                             data-bs-toggle="tooltip"
@@ -905,12 +908,42 @@
                             });
                             return false; // Jangan lanjutkan jika karakter pertama bukan '/'
                         }
+                        
+                        if (nomor.length > 2 && nomor.charAt(0) == 0) {
+                            swal({
+                                title: "Alert",
+                                text: "(Field Nomor) lebih dari 2 digit, digit pertama tidak boleh angka 0",
+                                type: "warning",
+                                timer: 1200,
+                                showConfirmButton: false
+                            });
+                            return false; // Jangan lanjutkan jika input kedua tidak memenuhi kondisi
+                        }
                         // Dapatkan nilai dari input dalam modal
                         var nilaiModal = firstCode+ "/" +$('#year_code').val()+ "/" + nomor + "/" +lastCode;
                         // Pindahkan nilai dari input modal ke input di luar modal
                         $('#transaction_no').val(nilaiModal);
                     } else {
-                        
+                        var selectedFormat = $('#format_no').find(":selected").val();
+
+                        var regex = /\/(\d{1,})\/([^\/]*)$/;
+                        var match = selectedFormat.match(regex);
+                        if (match) {
+                            // Ambil angka yang ditemukan
+                            var number = parseInt(match[1], 10);
+                            
+                            // Tambahkan 1
+                            number++;
+                            
+                            // Ubah angka yang sudah ditambah dengan format dua digit
+                            var newNumber = number.toString().padStart(2, '0');
+                            
+                            // Ganti angka dalam string dengan angka yang sudah ditambah
+                            var newFormat = selectedFormat.replace(regex, '/' + newNumber + '/'+match[2]);
+                            
+                            // Setel nilai pada elemen dengan ID 'transaction_no'
+                            $('#transaction_no').val(newFormat);
+                        }
                     }
                     // Tutup modal jika perlu
                     $('#first_code').val('');

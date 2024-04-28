@@ -55,72 +55,56 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr>
-                                                <td>1</td>
-                                                <td>14/01/2023</td>
-                                                <td>S000002</td>
-                                                <td>Ahmad</td>
-                                                <td>Pengantaran Barang</td>
-                                                <td>Rp. 100.000</td>
-                                                <td><span class="badge bg-success">Approve</span></td>
-                                                <td>
-                                                    <div class="dropdown" style="position: absolute; display: inline-block;">
-                                                        <a href="javascript:void(0)" data-bs-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fe fe-more-vertical"></i></a>
-                                                        <div class="dropdown-menu" style="min-width: 7rem; z-index: 999999999;">
-                                                            <a href="" class="btn text-purple btn-sm dropdown-item"><span
-                                                                    class="fe fe-eye fs-14"></span> Detail</a>
-                                                            <a href="" class="btn text-warning btn-sm dropdown-item"><span
-                                                                    class="fe fe-edit fs-14"></span> Edit</a>
-                                                            <a href="" class="btn text-danger btn-sm dropdown-item" onclick="if (confirm('Are you sure want to delete this item?')) {
-                                                                event.preventDefault();
-                                                                document.getElementById('').submit();
-                                                            }else{
-                                                                event.preventDefault();
-                                                            }"><span class="fe fe-trash fs-14"></span> Delete</a>
-                                                            <a href="" class="btn text-green btn-sm dropdown-item"><span class="bi bi-journal-text"></span> Journal</a>
-                                                            <form id="" action="" style="display: none;" method="POST">
-                                                                @csrf
-                                                                @method('DELETE')
-                                                            </form>      
+                                            @forelse ($data as $item)
+                                            @php
+                                                $pageNumber = $data->currentPage();
+                                                $index = ($pageNumber - 1) * $data->perPage() + $loop->index + 1;
+                                            @endphp
+                                                <tr>
+                                                    <td>{{ $index }}</td>
+                                                    <td>{{ isset($item->date) ? $item->date : null }}</td>
+                                                    <td>{{ isset($item->transaction_no) ? $item->transaction_no : null }}</td>
+                                                    <td>{{ isset($item->name) ? $item->name : null }}</td>
+                                                    <td>{{ isset($item->description) ? $item->description : null }}</td>
+                                                    <td>{{ isset($item->has_details_sum_total) ? $item->initial." ".$item->has_details_sum_total : null }}</td>
+                                                    <td>
+                                                        @if ($item->status == 2)
+                                                            <span class="badge bg-success">Approve</span></td>
+                                                        @else
+                                                            <span class="badge bg-warning">Open</span>
+                                                        @endif
+                                                    <td>
+                                                        <div class="dropdown" style="position: absolute; display: inline-block;">
+                                                            <a href="javascript:void(0)" data-bs-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fe fe-more-vertical"></i></a>
+                                                            <div class="dropdown-menu" style="min-width: 7rem; z-index: 999999999;">
+                                                                <a href="" class="btn text-purple btn-sm dropdown-item"><span
+                                                                        class="fe fe-eye fs-14"></span> Detail</a>
+                                                                <a href="/finance/receipt/cash-out/{{ $item->encryptId}}/edit" class="btn text-warning btn-sm dropdown-item"><span
+                                                                        class="fe fe-edit fs-14"></span> Edit</a>
+                                                                <a href="" class="btn text-danger btn-sm dropdown-item" onclick="if (confirm('Are you sure want to delete this item?')) {
+                                                                    event.preventDefault();
+                                                                    document.getElementById('').submit();
+                                                                }else{
+                                                                    event.preventDefault();
+                                                                }"><span class="fe fe-trash fs-14"></span> Delete</a>
+                                                                <a href="" class="btn text-green btn-sm dropdown-item"><span class="bi bi-journal-text"></span> Journal</a>
+                                                                <form id="" action="" style="display: none;" method="POST">
+                                                                    @csrf
+                                                                    @method('DELETE')
+                                                                </form>      
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                </td>
-                                            </tr>
+                                                    </td>
+                                                </tr>
+                                            @empty
                                             <tr>
-                                                <td>2</td>
-                                                <td>14/09/2024</td>
-                                                <td>S000004</td>
-                                                <td>Budi</td>
-                                                <td>Pengantaran Barang</td>
-                                                <td>Rp. 5.000.000</td>
-                                                <td><span class="badge bg-danger">Reject</span></td>
-                                                <td>
-                                                    <div class="dropdown" style="position: absolute; display: inline-block;">
-                                                        <a href="javascript:void(0)" data-bs-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fe fe-more-vertical"></i></a>
-                                                        <div class="dropdown-menu" style="min-width: 7rem; z-index: 999999999;">
-                                                            <a href="" class="btn text-purple btn-sm dropdown-item"><span
-                                                                    class="fe fe-eye fs-14"></span> Detail</a>
-                                                            <a href="" class="btn text-warning btn-sm dropdown-item"><span
-                                                                    class="fe fe-edit fs-14"></span> Edit</a>
-                                                            <a href="" class="btn text-danger btn-sm dropdown-item" onclick="if (confirm('Are you sure want to delete this item?')) {
-                                                                event.preventDefault();
-                                                                document.getElementById('').submit();
-                                                            }else{
-                                                                event.preventDefault();
-                                                            }"><span class="fe fe-trash fs-14"></span> Delete</a>
-                                                            <a href="" class="btn text-green btn-sm dropdown-item"><span class="bi bi-journal-text"></span> Journal</a>
-
-                                                            <form id="" action="" style="display: none;" method="POST">
-                                                                @csrf
-                                                                @method('DELETE')
-                                                            </form>      
-                                                        </div>
-                                                    </div>
-                                                </td>
+                                                <td colspan="8">No data display</td>
                                             </tr>
+                                            @endforelse
                                         </tbody>
                                     </table>
                                 </div>
+                                {!! $data->withQueryString()->links() !!}
                             </div>
                         </div>
                     </div>

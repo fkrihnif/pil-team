@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('transaction_no')->nullable();
             $table->string('description')->nullable();
             $table->boolean('is_job_order')->nullable();
-            $table->nullableMorphs('job_order_id');
+            $table->nullableMorphs('job_order');
             $table->foreignId('created_by')->nullable()->constrained("users")->cascadeOnUpdate()->nullOnDelete();
             $table->foreignId('updated_by')->nullable()->constrained("users")->cascadeOnUpdate()->nullOnDelete();
             $table->tinyInteger('status')->nullable();
