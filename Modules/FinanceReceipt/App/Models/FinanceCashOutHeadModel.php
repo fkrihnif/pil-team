@@ -44,6 +44,11 @@ class FinanceCashOutHeadModel extends Model
         return $this->belongsTo(User::class, 'updated_by', 'id');
     }
 
+    public function job_order()
+    {
+        return $this->morphTo();
+    }
+
     public function has_details()
     {
         return $this->hasMany(FinanceCashOutDetailModel::class, 'head_id');
